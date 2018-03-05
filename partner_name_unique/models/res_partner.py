@@ -26,9 +26,11 @@ class ResPartner(models.Model):
     @api.constrains('name')
     def _check_name_unique(self):
         for partner in self:
-            results = self.env['res.partner'].search_count([
-                ('name', 'ilike', partner.name.strip())
-            ])
-            if results > 1:
+            self.cr.execute("""
+                SELECT id
+                FROM res_partner
+                WHERE name ilike '{}'
+            """.format(partner.name))
+            if (len(self._cr.dictfetchall()) > 1):
                 raise ValidationError(
                     _("The name must be unique per partner!"))
