@@ -26,7 +26,7 @@ class ResPartner(models.Model):
     @api.constrains('name')
     def _check_name_unique(self):
         for partner in self:
-            self._cr.execute("""
+            self._cr.execute(u"""
                 SELECT id
                 FROM res_partner
                 WHERE name ilike '{}'
